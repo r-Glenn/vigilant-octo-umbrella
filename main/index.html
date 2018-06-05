@@ -5,10 +5,41 @@
     <link rel="stylesheet" href="assets/css/main.css">
   </head>
   <body>
-    <div id="root">
-      <h2>{{ sample_text }}</h2>
-      <v-autocomplete></v-autocomplete>
+    <script type="text/x-template" id="autocomplete-tpl">
+  <div class="autocomplete">
+    <label :for="id">{{label}}</label>
+    <textarea v-if="textarea" :id="id" :rows="rows" :cols="cols" class="autocomplete-input" :placeholder="placeholder" @focusout="focusout" @focus="focus" @keydown.13="chooseItem" @keydown.tab="chooseItem" @keydown.40="moveDown" @keydown.38="moveUp" v-model="inputValue"
+      type="text"></textarea>
+    <input v-else :id="id" class="autocomplete-input" :placeholder="placeholder" @focusout="focusout" @focus="focus" @keydown.13="chooseItem" @keydown.tab="chooseItem" @keydown.40="moveDown" @keydown.38="moveUp" v-model="inputValue" type="text">
+
+
+    <ul :class="{
+      'autocomplete-list': true,
+      [id+'-list']: true
+    }" v-if="searchMatch.length > 0">
+      <li :class="{active: selectedIndex === index}" v-for="(result, index) in searchMatch" @click="selectItem(index), chooseItem()" v-html="highlightWord(result)">
+
+      </li>
+    </ul>
+  </div>
+</script>
+
+
+<div id="app">
+
+  <div class="container">
+    <div class="container-row">
+       <div class="container-item">
+        <autocomplete label="Standard items:" placeholder="span, div, h1..." />
+       </div>
+       <div class="container-item">
+        <br />
+        <br />
+        <autocomplete label="Custom items:" :items="['all', 'auto', 'complete', 'items']" placeholder="all, auto..." />
+       </div>
+      </div>
     </div>
+  </div>
 
     <!-- Scripts  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
